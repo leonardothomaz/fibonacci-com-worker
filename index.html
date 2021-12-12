@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CCH</title>
+</head>
+<body>
+  <h1>Fib sequencial</h1>
+  <p>Sequenica de fibonacci: <output id="result1"></output></p>
+  <button onclick="startFibonacci()">Inicia fibonacci sequencial</button>
+  <button onclick="stopFibonacci()">Para fibonacci sequencial</button>
+
+  <h1>Fib com Worker</h1>
+  <p>Sequenica de fibonacci: <output id="result2"></output></p>
+  <button onclick="startWorker()">Inicia fibonacci com Worker</button>
+  <button onclick="stopWorker()">Para fibonacci com Worker</button>
+
+  <script>
+
+    var w;
+    function startWorker() {
+      if (typeof(w) == 'undefined') {
+        w = new Worker('fibonacci.js');
+      }
+      w.onmessage = (event) => {
+        document.getElementById('result2').textContent += ' ' + event.data;
+      }
+    }
+
+    function stopWorker() {
+      w.terminate();
+      w = 'undefined';
+      document.getElementById('result2').textContent = '';
+    }
+
+    // para deixar mais clara a vantegem de paralelizar.
+    function sleep(ms) {
+      const date = Date.now();
+      let currentDate = null;
+      do {
+        currentDate = Date.now();
+
+      } while (currentDate - date < ms);
+    }
+
+    var a = 1,
+         b = 1,
+          temp,
+           stopExec = 0;
+    
+    var result1 = document.getElementById('result1');
+
+    function startFibonacci() {
+      while (!stopExec) {
+        temp = b;
+        b = a + b;
+        a = temp;
+        result1.textContent += ' '+ a;
+        sleep(200);
+        if(a > 1000) {
+          stopExec = 1;
+        }
+      }
+    }
+
+    function stopFibonacci() {
+      stopExec = 1;
+    }
+  </script>
+</body>
+</html>
