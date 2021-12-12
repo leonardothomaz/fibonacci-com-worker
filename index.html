@@ -21,7 +21,7 @@
 
     var w;
     function startWorker() {
-      if (typeof(w) == 'undefined') {
+      if (!w) {
         w = new Worker('fibonacci.js');
       }
       w.onmessage = (event) => {
@@ -31,7 +31,7 @@
 
     function stopWorker() {
       w.terminate();
-      w = 'undefined';
+      w = null;
       document.getElementById('result2').textContent = '';
     }
 
